@@ -2,7 +2,7 @@
 def bank(sum, m, p):
 
     for i in range(m):
-        sum *= 1 + (p/100)
+        sum *= 1 + (p/100)              # так как проценты указываются как 15%, 10%, то нужно перевести их в сотые
 
     return sum
 
@@ -11,7 +11,7 @@ def bank_rep(sum, m, p):
 
     total = sum
     for i in range(m):
-        total += sum
+        total += sum                # ежемесечное пополнение
         total *= 1 + (p/100)
 
     return total

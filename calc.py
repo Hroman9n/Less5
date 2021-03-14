@@ -1,5 +1,6 @@
 import math
 
+# функции для расчета
 def add(a, b):
     return a + b
 def sub(a, b):
@@ -13,12 +14,13 @@ def root(a, b):
     return pow(a, b)
 
 
-
+# ассоциативный словарь
 ops = {'+': add, '-': sub, '*': mul, '/': div, '^': pow, 'l': math.log, 'r': root}
 
+### так как первая строка - уникальный случай, то необходимо её отдельно обрабатывать
 def first_calc(inpt):
-    flag = 0
-    cnt = 0
+    flag = 0            # используем как указатель для нахождения оператора
+    cnt = 0             # используем чтобы посмотреть, что у нас не более одного оператора
     for i in range(len(inpt)):
         if inpt[i] in ops:                      # это нам необходимо для проверки на минус
             if inpt[i] == '-' and cnt > 0:      # ведь могут вводиться отрицательные числа
@@ -30,10 +32,10 @@ def first_calc(inpt):
 
     if flag == 0:       # смотрим попадался ли нам оператор
         print("Не было встречено оператора (либо вы ввели первым символом оператора и только одно число)")
-        return
+        exit()
     elif flag != 0 and cnt > 1:     # если встретилось больше одного оператора в строке
         print("Введено более одного оператора")
-        return
+        exit()
     else:
         op = inpt[flag]
         # попытка преобразовать первое число 
@@ -65,22 +67,25 @@ def first_calc(inpt):
         if op == 'l' and first < 0:
             print(f"Логарифм должен браться от положительного числа(сейчас от {first}). Возвращаю единицу")
             return 1
+        
+        # пробуем выполнение указанной операции
         try:
             ops[op](first, second)
-        except ZeroDivisionError:
-            res = math.nan
-        except OverflowError:
+        except ZeroDivisionError:       # если получаем деление на ноль, то вернем NaN чтобы программа не сломалась и могла работать дальше
+            res = math.nan              # NaN можно возвести в нулевую степень для получения единицы
+        except OverflowError:           # если получаем слишком большое число в виде float, то возвращаем вместо него infinity
             res = math.inf
         else:
             res = ops[inpt[flag]](first, second)
         
         return res
 
+### функция для продолжения вычислений
 def cont_calc(prev, new):
     # получаем оператора и число
     if new[0] not in ops:
         print(f"Похоже, первый символ {new[0]} это не оператор, операция отменяется")
-        return
+        return prev
     else:
         op = new[0]
         nmbr = new[1:]
@@ -91,9 +96,12 @@ def cont_calc(prev, new):
     except ValueError:
         print(f"Невозможно преобразовать число {nmbr}, похоже, это и не число. Возвращаю исходное значение")
         return prev
+    except OverflowError:
+        return math.inf
     else:
         nmbr = float(nmbr)
 
+    # история с логарифмом повторяется
     if op == 'l' and nmbr < 0:
         print(f"Логарифм не может быть с отрицательным основанием({nmbr}), преобразовываю в положительное")
         nmbr = abs(nmbr)
@@ -135,7 +143,7 @@ if inpt == '':
 else:
     res = first_calc(inpt)
     while 1:
-        print(f"Результат: {res:.5}\n")
+        print(f"Результат: {res:.5f}\n")
         inpt = input("Продолжаем считать?(Выход - Enter): ")
 
         if inpt == '':

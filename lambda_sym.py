@@ -3,6 +3,7 @@ def counting(text):
     symbols = {}
 
     for i in text:
+        # возвращает увеличенное на 1 количество вхождений, либо создает новый ключ со значением 1
         cnt = lambda i: symbols[i]+1 if i in symbols else 1
         symbols[i] = cnt(i)
     
