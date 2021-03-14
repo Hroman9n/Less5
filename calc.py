@@ -135,7 +135,7 @@ if inpt == '':
 else:
     res = first_calc(inpt)
     while 1:
-        print(f"Результат: {res}\n")
+        print(f"Результат: {res:.5}\n")
         inpt = input("Продолжаем считать?(Выход - Enter): ")
 
         if inpt == '':
